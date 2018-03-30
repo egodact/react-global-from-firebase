@@ -1,14 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, Children } from 'react';
 import PropTypes from 'prop-types';
 import getEmptyState from './utils/getEmptyState';
+import { getLocalKey, getLocalKeyId } from './utils/getLocalKeys';
 
 export default class GlobalVarSetup extends Component {
   static propTypes = {
-    firebaseRefs: PropTypes.object.isRequired
+    firebaseRefs: PropTypes.object.isRequired,
+    loadingScreen: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.func
+    ]),
     children: PropTypes.node.isRequired
   };
 
   state = getEmptyState(this.props.firebaseRef);
+
+  listeners = {};
 
   componentDidMount = () => {
     const firebaseRefs = this.props.firebaseRefs;
@@ -28,21 +35,23 @@ export default class GlobalVarSetup extends Component {
   };
 
   addListener = (key, ref) => {
-    ref.on('value', (snapshot) => {
+    const listener = (snapshot) => {
       this.setState({ [key]: snapshot.val() });
-    });
+    };
+    ref.on('value', listener);
+    listeners[key] = { ref, listener };
   };
 
   loadFromCache = (key) => {
     this.setState({
-      [key]: localStorage.getItem(`react-global-from-firebase:${key}`)
+      [key]: localStorage.getItem(getLocalKey(key))
     });
   };
 
   listenForCacheUpdates = (key, ref) => {
     ref.idRef.on('value', (snapshot) => {
       const id = snapshot.val();
-      const cachedId = localStorage.getItem(`react-global-from-firebase:${key}Id`);
+      const cachedId = localStorage.getItem(getLocalKeyId(key));
       if (id !== cachedId) this.updateCache(key, ref, id);
     });
   };
@@ -50,41 +59,46 @@ export default class GlobalVarSetup extends Component {
   updateCache = (key, ref, id) => {
     ref.once('value').then((snapshot) => {
       const value = snapshot.val();
-      // TODO: Make some helper function for this
-      localStorage.setItem(`react-global-from-firebase:${key}`, value);
-      localStorage.setItem(`react-global-from-firebase:${key}Id`, id);
+      localStorage.setItem(getLocalKey(key), value);
+      localStorage.setItem(getLocalKeyId(key), value);
       this.loadFromCache(key);
     });
   };
 
-  // TODO: Make this work
   componentWillUnmount = () => {
-    this.allowedEmailRef().off();
-    this.allowedEmailPrefixRef().off();
-    this.logoIdRef().off();
-    this.loginBgIdRef().off();
+    Object.values(this.listeners).forEach(({ ref, listener }) => {
+      ref.off(listener);
+    });
   };
 
-  // TODO: Update this
   syncStateToWindow = () => {
-    const { allowedEmail, allowedEmailPrefix, logo, loginBg } = this.state;
-    global.allowedEmail = allowedEmail;
-    global.allowedEmailPrefix = allowedEmailPrefix;
-    global.logo = logo;
-    global.loginBg = loginBg;
+    Object.keys(this.state).forEach((key) => {
+      global[key] = this.state[key];
+    });
   };
+
+  isLoaded = () =>
+    Object.values(this.state).reduce(
+      (acc, value) => acc && value !== null,
+      true
+    );
 
   render = () => {
-    const { allowedEmail, allowedEmailPrefix, logo, loginBg } = this.state;
     this.syncStateToWindow();
-    if (
-      allowedEmail === null ||
-      allowedEmailPrefix === null ||
-      logo === null ||
-      loginBg === null
-    ) {
-      return <LoadingScreen />;
+    const loaded = this.isLoaded();
+    const { loadingScreen, children } = this.props;
+
+    if (loaded) return children;
+
+    if (typeof loadingScreen === 'function') {
+      return loadingScreen(this.state);
     }
-    return this.props.children;
+
+    if (typeof loadingScreen !== 'undefined') {
+      const LoadingScreen = Children.only(loadingScreen);
+      return <LoadingScreen {...this.state} />
+    }
+
+    return null;
   };
 }
