@@ -80,7 +80,10 @@ export default class GlobalVarSetup extends Component {
     );
 
   render = () => {
+    console.log(this.state)
     const loaded = this.isLoaded();
+    console.log(loaded)
+    console.log(global.foo, global.bar)
     const { loadingScreen, children } = this.props;
 
     if (loaded) return children;
