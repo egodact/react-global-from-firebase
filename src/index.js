@@ -36,16 +36,18 @@ export default class GlobalVarSetup extends Component {
 
   addListener = (key, ref) => {
     const listener = (snapshot) => {
-      this.setState({ [key]: snapshot.val() });
+      const value = snapshot.val();
+      global[key] = value;
+      this.setState({ [key]: value });
     };
     ref.on('value', listener);
     this.listeners[key] = { ref, listener };
   };
 
   loadFromCache = (key) => {
-    this.setState({
-      [key]: localStorage.getItem(getLocalKey(key))
-    });
+    const value = localStorage.getItem(getLocalKey(key));
+    global[key] = value;
+    this.setState({ [key]: value });
   };
 
   listenForCacheUpdates = (key, ref) => {
@@ -71,12 +73,6 @@ export default class GlobalVarSetup extends Component {
     });
   };
 
-  syncStateToWindow = () => {
-    Object.keys(this.state).forEach((key) => {
-      global[key] = this.state[key];
-    });
-  };
-
   isLoaded = () =>
     Object.values(this.state).reduce(
       (acc, value) => acc && value !== null,
@@ -84,7 +80,6 @@ export default class GlobalVarSetup extends Component {
     );
 
   render = () => {
-    this.syncStateToWindow();
     const loaded = this.isLoaded();
     const { loadingScreen, children } = this.props;
 
