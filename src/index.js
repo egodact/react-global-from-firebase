@@ -44,7 +44,7 @@ export default class GlobalFromFirebase extends Component {
     this.setState({ [key]: value });
   };
 
-  componentWillUnmount = () => detachListeners(Object.values(this.state));
+  componentWillUnmount = () => detachListeners(Object.values(this.listeners));
 
   isLoaded = () => !inArray(Object.values(this.state), null);
 
@@ -58,9 +58,8 @@ export default class GlobalFromFirebase extends Component {
       return loadingScreen(this.state);
     }
 
-    if (typeof loadingScreen !== 'undefined') {
-      const LoadingScreen = Children.only(loadingScreen);
-      return <LoadingScreen {...this.state} />
+    if (typeof loadingScreen !== 'undefined' && loadingScreen !== null) {
+      return Children.only(loadingScreen);
     }
 
     return null;
