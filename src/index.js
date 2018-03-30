@@ -1,7 +1,9 @@
 import React, { Component, Children } from 'react';
 import PropTypes from 'prop-types';
 import getEmptyState from './utils/getEmptyState';
-import { getLocalKey, getLocalKeyId } from './utils/getLocalKeys';
+import setupFirebaseRefs from './utils/setupFirebaseRefs';
+import detachListeners from './utils/detachListeners';
+import arrayContainsNull from './utils/arrayContainsNull';
 
 export default class GlobalVarSetup extends Component {
   static propTypes = {
@@ -17,73 +19,37 @@ export default class GlobalVarSetup extends Component {
 
   listeners = {};
 
-  componentDidMount = () => {
-    const firebaseRefs = this.props.firebaseRefs;
-    Object.keys(firebaseRefs).forEach((key) => {
-      const ref = firebaseRefs[key];
-      if (typeof ref === 'object' && ref.idRef) {
-        this.loadFromCache(key);
-        this.listenForCacheUpdates(key, ref);
-        return;
-      }
-      if (typeof ref === 'object' && ref.ref) {
-        this.addListener(key, ref.ref);
-        return;
-      }
-      this.addListener(key, ref);
-    });
-  };
+  componentDidMount = () =>
+    setupFirebaseRefs(
+      this.props.firebaseRefs,
+      this.setStateAndGlobal,
+      this.addListener
+    );
 
   addListener = (key, ref) => {
     const listener = (snapshot) => {
       const value = snapshot.val();
-      global[key] = value;
-      this.setState({ [key]: value });
+      this.setStateAndGlobal(key, value);
     };
     ref.on('value', listener);
+    this.registerListener(key, ref, listener);
+  };
+
+  registerListener = (key, ref, listener) => {
     this.listeners[key] = { ref, listener };
   };
 
-  loadFromCache = (key) => {
-    const value = localStorage.getItem(getLocalKey(key));
+  setStateAndGlobal = (key, value) => {
     global[key] = value;
     this.setState({ [key]: value });
   };
 
-  listenForCacheUpdates = (key, ref) => {
-    ref.idRef.on('value', (snapshot) => {
-      const id = snapshot.val();
-      const cachedId = localStorage.getItem(getLocalKeyId(key));
-      if (id !== cachedId) this.updateCache(key, ref.ref, id);
-    });
-  };
+  componentWillUnmount = () => detachListeners(Object.values(this.state));
 
-  updateCache = (key, ref, id) => {
-    ref.once('value').then((snapshot) => {
-      const value = snapshot.val();
-      localStorage.setItem(getLocalKey(key), value);
-      localStorage.setItem(getLocalKeyId(key), id);
-      this.loadFromCache(key);
-    });
-  };
-
-  componentWillUnmount = () => {
-    Object.values(this.listeners).forEach(({ ref, listener }) => {
-      ref.off(listener);
-    });
-  };
-
-  isLoaded = () =>
-    Object.values(this.state).reduce(
-      (acc, value) => acc && value !== null,
-      true
-    );
+  isLoaded = () => !arrayContainsNull(Object.values(this.state));
 
   render = () => {
-    console.log(this.state)
     const loaded = this.isLoaded();
-    console.log(loaded)
-    console.log(global.foo, global.bar)
     const { loadingScreen, children } = this.props;
 
     if (loaded) return children;
