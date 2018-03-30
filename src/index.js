@@ -13,7 +13,7 @@ export default class GlobalVarSetup extends Component {
     children: PropTypes.node.isRequired
   };
 
-  state = getEmptyState(this.props.firebaseRef);
+  state = getEmptyState(this.props.firebaseRefs);
 
   listeners = {};
 
@@ -39,7 +39,7 @@ export default class GlobalVarSetup extends Component {
       this.setState({ [key]: snapshot.val() });
     };
     ref.on('value', listener);
-    listeners[key] = { ref, listener };
+    this.listeners[key] = { ref, listener };
   };
 
   loadFromCache = (key) => {
@@ -52,7 +52,7 @@ export default class GlobalVarSetup extends Component {
     ref.idRef.on('value', (snapshot) => {
       const id = snapshot.val();
       const cachedId = localStorage.getItem(getLocalKeyId(key));
-      if (id !== cachedId) this.updateCache(key, ref, id);
+      if (id !== cachedId) this.updateCache(key, ref.ref, id);
     });
   };
 
@@ -60,7 +60,7 @@ export default class GlobalVarSetup extends Component {
     ref.once('value').then((snapshot) => {
       const value = snapshot.val();
       localStorage.setItem(getLocalKey(key), value);
-      localStorage.setItem(getLocalKeyId(key), value);
+      localStorage.setItem(getLocalKeyId(key), id);
       this.loadFromCache(key);
     });
   };

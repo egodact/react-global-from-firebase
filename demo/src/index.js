@@ -1,15 +1,27 @@
-import React, {Component} from 'react'
-import {render} from 'react-dom'
+import React, { Component } from 'react'
+import { render } from 'react-dom'
+import GlobalVarSetup from '../../src'
+import * as firebase from 'firebase';
+import firebaseConfig from './firebaseConfig';
 
-import Example from '../../src'
+if (firebase.apps.length === 0) firebase.initializeApp(firebaseConfig);
 
-class Demo extends Component {
-  render() {
-    return <div>
-      <h1>react-global-from-firebase Demo</h1>
-      <Example/>
-    </div>
-  }
-}
+const ref = firebase.database().ref();
 
-render(<Demo/>, document.querySelector('#demo'))
+const Demo = () => (
+  <GlobalVarSetup
+    firebaseRefs={{
+      foo: ref.child('foo'),
+      bar: {
+        ref: ref.child('bar'),
+        idRef: ref.child('barId')
+      }
+    }}
+  >
+    <h2 style={{ marginTop: 0, fontFamily: 'sans-serif', fontWeight: 400 }}>
+      react-global-from-firebase
+    </h2>
+  </GlobalVarSetup>
+);
+
+render(<Demo />, document.querySelector('#demo'))
