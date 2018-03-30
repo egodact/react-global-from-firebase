@@ -1,4 +1,4 @@
-import { getLocalKey, getLocalKeyId } from './getLocalKeys';
+import { getLocalKey, getLocalKeyId } from '../getLocalKeys';
 
 const updateCache = async (key, ref, id) => {
   const snapshot = await ref.once('value');

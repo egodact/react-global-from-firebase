@@ -1,4 +1,4 @@
-import { getLocalKeyId } from './getLocalKeys';
+import { getLocalKeyId } from '../getLocalKeys';
 
 const getCachedId = key => localStorage.getItem(getLocalKeyId(key));
 
