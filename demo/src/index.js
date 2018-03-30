@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
-import GlobalVarSetup from '../../src'
+import GlobalFromFirebase from '../../src'
 import * as firebase from 'firebase';
 import firebaseConfig from './firebaseConfig';
 import VarBlock from './VarBlock';
@@ -10,7 +10,7 @@ if (firebase.apps.length === 0) firebase.initializeApp(firebaseConfig);
 const ref = firebase.database().ref();
 
 const Demo = () => (
-  <GlobalVarSetup
+  <GlobalFromFirebase
     firebaseRefs={{
       foo: ref.child('foo'),
       bar: {
@@ -34,7 +34,7 @@ const Demo = () => (
       </h2>
       <VarBlock />
     </div>
-  </GlobalVarSetup>
+  </GlobalFromFirebase>
 );
 
 render(<Demo />, document.querySelector('#demo'))

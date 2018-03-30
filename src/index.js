@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import getEmptyState from './utils/getEmptyState';
 import setupFirebaseRefs from './utils/setupFirebaseRefs';
 import detachListeners from './utils/detachListeners';
-import arrayContainsNull from './utils/arrayContainsNull';
+import inArray from 'in-array';
 
-export default class GlobalVarSetup extends Component {
+export default class GlobalFromFirebase extends Component {
   static propTypes = {
     firebaseRefs: PropTypes.object.isRequired,
     loadingScreen: PropTypes.oneOfType([
@@ -46,7 +46,7 @@ export default class GlobalVarSetup extends Component {
 
   componentWillUnmount = () => detachListeners(Object.values(this.state));
 
-  isLoaded = () => !arrayContainsNull(Object.values(this.state));
+  isLoaded = () => !inArray(Object.values(this.state), null);
 
   render = () => {
     const loaded = this.isLoaded();
