@@ -40,7 +40,7 @@ describe('updateCacheOnChange.js', () => {
     let attachedListener;
     const ref = {
       ref: {
-        once: () => ({ val: () => 'newBar' })
+        once: () => new Promise(resolve => resolve({ val: () => 'newBar' }))
       },
       idRef: {
         on: (type, listener) => {

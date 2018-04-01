@@ -13,7 +13,7 @@ afterEach(() => {
 describe('updateCache.js', () => {
   it('updates the cached value and its cached ID with the value from given listener', async () => {
     const ref = {
-      once: () => ({ val: () => 'newBar' })
+      once: () => new Promise(resolve => resolve({ val: () => 'newBar' }))
     };
     await updateCache('foo', ref, '321');
     expect(localStorage.getItem('react-global-from-firebase:foo')).toBe(
