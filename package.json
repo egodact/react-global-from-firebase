@@ -1,7 +1,7 @@
 {
   "name": "react-global-from-firebase",
   "version": "1.0.0",
-  "description": "React component that sets up a global state from Firebase ref(s)",
+  "description": "React component that sets up a global state from Firebase refs",
   "repository": {
     "type": "git",
     "url": "https://github.com/rafaelklaessen/react-global-from-firebase.git"
@@ -32,8 +32,7 @@
   },
   "dependencies": {
     "in-array": "^0.1.2",
-    "prop-types": "^15.6.1",
-    "react-display-name": "^0.2.3"
+    "prop-types": "^15.6.1"
   },
   "peerDependencies": {
     "firebase": "4.x",
