@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { render } from 'react-dom'
 import GlobalFromFirebase from '../../src'
 import * as firebase from 'firebase';

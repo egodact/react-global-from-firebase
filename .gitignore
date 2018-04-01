@@ -7,3 +7,4 @@
 npm-debug.log*
 firebaseConfig.js
 yarn-error.log
+.DS_Store
