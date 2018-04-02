@@ -6,7 +6,9 @@ const updateCacheOnChange = (key, ref, setStateAndGlobal) => {
     const id = snapshot.val();
     const cachedId = getCachedId(key)
     if (id !== cachedId) {
-      return updateCache(key, ref.ref, id).then(setStateAndGlobal);
+      return updateCache(key, ref.ref, id).then(value =>
+        setStateAndGlobal(key, value)
+      );
     }
   });
 };

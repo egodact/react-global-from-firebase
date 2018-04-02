@@ -52,7 +52,7 @@ describe('updateCacheOnChange.js', () => {
     updateCacheOnChange('foo', ref, updateSpy);
     await attachedListener({ val: () => '321' });
     expect(updateSpy.mock.calls.length).toBe(1);
-    expect(updateSpy.mock.calls[0][0]).toBe('newBar');
+    expect(updateSpy.mock.calls[0]).toEqual(['foo', 'newBar']);
     expect(localStorage.getItem('react-global-from-firebase:foo')).toBe(
       'newBar'
     );
