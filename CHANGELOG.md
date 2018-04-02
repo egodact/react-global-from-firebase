@@ -1,3 +1,9 @@
+# Version 1.0.2
+Released 2018-04-02
+
+- Fixed a bug that caused initial caching to break
+- Added missing semicolons
+
 # Version 1.0.1
 Released 2018-04-01
 
