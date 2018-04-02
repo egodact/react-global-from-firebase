@@ -11,7 +11,7 @@ See the [demo](https://github.com/rafaelklaessen/react-global-from-firebase/tree
 
 ```javascript
 import * as firebase from 'firebase';
-import GlobalFromFirebase from 'react-global-from-firebase'
+import GlobalFromFirebase from 'react-global-from-firebase';
 
 const ref = firebase.database().ref();
 

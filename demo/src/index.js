@@ -1,6 +1,6 @@
-import React from 'react'
-import { render } from 'react-dom'
-import GlobalFromFirebase from '../../src'
+import React from 'react';
+import { render } from 'react-dom';
+import GlobalFromFirebase from '../../src';
 import * as firebase from 'firebase';
 import firebaseConfig from './firebaseConfig';
 import VarBlock from './VarBlock';
