@@ -59,6 +59,15 @@ describe('GlobalFromFirebase.js', () => {
     ])
   });
 
+  it('unmounts without crashing', () => {
+    const globalFromFirebase = mount(
+      <GlobalFromFirebase firebaseRefs={{ foo: {}, bar: {} }}>
+        <span />
+      </GlobalFromFirebase>
+    );
+    globalFromFirebase.instance().componentWillUnmount();
+  });
+
   it('adds listeners correctly', () => {
     const globalFromFirebase = shallow(
       <GlobalFromFirebase firebaseRefs={{}}><span /></GlobalFromFirebase>

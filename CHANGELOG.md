@@ -1,3 +1,8 @@
+# Version 1.0.3
+Released 2018-04-05
+
+- Fixed a bug that caused the unmount method to crash
+
 # Version 1.0.2
 Released 2018-04-02
 

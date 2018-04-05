@@ -25,8 +25,8 @@ describe('detachListeners.js', () => {
     ];
     detachListeners(listeners);
     expect(offSpy.mock.calls.length).toBe(3);
-    expect(offSpy.mock.calls[0][0]).toBe('foo');
-    expect(offSpy.mock.calls[1][0]).toBe('bar');
-    expect(offSpy.mock.calls[2][0]).toBe('baz');
+    expect(offSpy.mock.calls[0]).toEqual(['value', 'foo']);
+    expect(offSpy.mock.calls[1]).toEqual(['value', 'bar']);
+    expect(offSpy.mock.calls[2]).toEqual(['value', 'baz']);
   });
 });
