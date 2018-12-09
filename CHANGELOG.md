@@ -1,3 +1,8 @@
+# Version 1.0.4
+Released 2018-12-09
+
+- Upgraded peer dependency versions
+
 # Version 1.0.3
 Released 2018-04-05
 
