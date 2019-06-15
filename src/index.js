@@ -12,6 +12,7 @@ export default class GlobalFromFirebase extends Component {
       PropTypes.element,
       PropTypes.func
     ]),
+    onUpdate: PropTypes.func,
     children: PropTypes.node.isRequired
   };
 
@@ -41,7 +42,12 @@ export default class GlobalFromFirebase extends Component {
 
   setStateAndGlobal = (key, value) => {
     global[key] = value;
-    this.setState({ [key]: value });
+    this.setState({ [key]: value }, () => {
+      const onUpdate = this.props.onUpdate;
+      if (onUpdate) {
+        onUpdate(this.state);
+      }
+    });
   };
 
   componentWillUnmount = () => detachListeners(Object.values(this.listeners));

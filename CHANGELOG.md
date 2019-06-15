@@ -1,3 +1,8 @@
+# Version 1.1.0
+Released 2019-06-15
+
+- Added `onUpdate` prop
+
 # Version 1.0.4
 Released 2018-12-09
 

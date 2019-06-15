@@ -1,6 +1,6 @@
 {
   "name": "react-global-from-firebase",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "React component that sets up a global state from Firebase refs",
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
     "umd"
   ],
   "scripts": {
-    "build": "nwb build-react-component",
+    "build": "mv -v .babelrc .temp_babelrc && nwb build-react-component && mv -v .temp_babelrc .babelrc",
     "clean": "nwb clean-module && nwb clean-demo",
     "start": "nwb serve-react-demo",
     "test": "jest"
