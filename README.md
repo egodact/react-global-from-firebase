@@ -43,6 +43,7 @@ Prop | Description | Type
 ---- | ----------- | ----
 `firebaseRefs*` | The refs that should be loaded into the `global` object. The ref value will be added to the `global` object under given key (eg if you do `{ foo: ref.child('bar') }`, `global.foo` will be set to the value of `ref.child('bar')`). | `object`
 `loadingScreen` | Node to show while the ref values are loading. Can also take a function that returns an node <br> *Signature of the function when passed:* <br> `function(state: object) => node` | `node` or `function`
+`onUpdate` | Invoked whenever a Firebase value is updated | `function(state: object) => any`
 `children*` | Children of the component | `node`
 
 ## Caching
